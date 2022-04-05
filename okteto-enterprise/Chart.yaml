@@ -1,0 +1,42 @@
+apiVersion: v2
+appVersion: 1.12.25
+dependencies:
+- condition: ingress-nginx.enabled
+  enabled: true
+  name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 4.0.11
+- condition: nginx-ingress.enabled
+  enabled: true
+  name: nginx-ingress
+  repository: https://storage.googleapis.com/charts.okteto.com
+  version: 1.41.2
+- condition: cert-manager.enabled
+  enabled: true
+  name: cert-manager
+  repository: https://charts.jetstack.io
+  version: 1.5.2
+- condition: cloud.provider.civo.enabled
+  name: cert-manager-webhook-civo
+  repository: https://storage.googleapis.com/charts.okteto.com
+  version: 0.2.0
+- condition: reloader.enabled
+  name: reloader
+  repository: https://stakater.github.io/stakater-charts
+  version: v0.0.99
+description: Development platform for Kubernetes applications
+home: https://okteto.com
+icon: https://okteto.com/okteto-symbol-circle-inverse-1.1.png
+keywords:
+- okteto
+- development
+- team collaboration
+maintainers:
+- email: ramiro@okteto.com
+  name: Ramiro Berrelleza
+- email: pablo@okteto.com
+  name: Pablo Chico de Guzman
+- email: irespaldiza@okteto.com
+  name: Iñaki Respaldiza
+name: okteto-enterprise
+version: 0.10.7

@@ -1,0 +1,72 @@
+{{- if .Values.autoscaler.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "okteto.fullname" . }}-autoscaler"
+  labels:
+    app.kubernetes.io/component: "autoscaler"
+    app.kubernetes.io/part-of: "okteto"
+    app.kubernetes.io/name: "{{ include "okteto.fullname" . }}-autoscaler"
+    helm.sh/chart: {{ include "okteto.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.autoscaler.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ include "okteto.fullname" . }}-autoscaler"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "{{ include "okteto.fullname" . }}-autoscaler"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: "autoscaler"
+        app.kubernetes.io/part-of: "okteto"
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end }}
+{{- if .Values.autoscaler.labels }}
+{{ toYaml .Values.autoscaler.labels | indent 8 }}
+{{- end }}
+      annotations:
+        checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+{{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
+{{- if .Values.autoscaler.annotations }}
+{{ toYaml .Values.autoscaler.annotations | indent 8 }}
+{{- end }}
+    spec:
+      serviceAccountName: {{ include "okteto.fullname" . }}
+      {{- if .Values.tolerations.oktetoPool }}
+      tolerations:
+      - key: "okteto-node-pool"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.oktetoPool }}"
+        effect: "NoSchedule"
+      nodeSelector:
+        okteto-node-pool: "{{ .Values.tolerations.oktetoPool }}"
+      {{- end }}
+      volumes:
+        - name: tls-certs
+          secret:
+            defaultMode: 420
+            secretName: {{ include "okteto.ingress.tlsSecret" . }}
+      containers:
+        - name: autoscaler
+          image: {{ .Values.backend.image.registry }}:{{ .Values.backend.image.tag }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          args: [ "autoscaler" ]
+          envFrom:
+            - configMapRef:
+                name: "{{ include "okteto.fullname" . }}"
+            - secretRef:
+                name: {{ include "okteto.fullname" . }}
+          volumeMounts:
+            - name: tls-certs
+              mountPath: /run/secrets/tls
+              readOnly: true
+          resources:
+{{ toYaml .Values.autoscaler.resources | indent 12 }}
+{{- end }}

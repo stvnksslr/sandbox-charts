@@ -1,0 +1,10 @@
+apiVersion: v2
+name: cloudheim
+version: 1.1.9
+description: Valheim dedicated server.
+keywords:
+- game
+- server
+home: https://www.valheimgame.com/
+sources:
+- https://github.com/lloesche/valheim-server-docker

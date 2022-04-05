@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "okteto.fullname" . }}-frontend"
+  labels:
+    app.kubernetes.io/component: "frontend"
+    app.kubernetes.io/part-of: "okteto"
+    app.kubernetes.io/name: "{{ include "okteto.fullname" . }}-frontend"
+    helm.sh/chart: {{ include "okteto.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ include "okteto.fullname" . }}-frontend"
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "{{ include "okteto.fullname" . }}-frontend"
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: "frontend"
+        app.kubernetes.io/part-of: "okteto"
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end }}
+{{- if .Values.frontend.labels }}
+{{ toYaml .Values.frontend.labels | indent 8 }}
+{{- end }}
+{{- if or .Values.podAnnotations .Values.frontend.annotations }}
+      annotations:
+  {{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+  {{- end }}
+  {{- if .Values.frontend.annotations }}
+{{ toYaml .Values.frontend.annotations | indent 8 }}
+  {{- end }}
+{{- end }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          {{- if .Values.affinity.required }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                      - "{{ include "okteto.fullname" . }}-frontend"
+              topologyKey: kubernetes.io/hostname
+          {{- else }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - "{{ include "okteto.fullname" . }}-frontend"
+                topologyKey: kubernetes.io/hostname
+          {{- end }}
+      serviceAccountName: default
+      {{- if .Values.tolerations.oktetoPool }}
+      tolerations:
+      - key: "okteto-node-pool"
+        operator: "Equal"
+        value: "{{ .Values.tolerations.oktetoPool }}"
+        effect: "NoSchedule"
+      nodeSelector:
+        okteto-node-pool: "{{ .Values.tolerations.oktetoPool }}"
+      {{- end }}
+      containers:
+        - name: frontend
+          image: {{ .Values.frontend.image.registry }}:{{ .Values.frontend.image.tag }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.port }}
+              protocol: TCP
+          env:
+            - name: THEME_PRIMARY
+              value: {{ .Values.theme.primary }}
+            - name: INSTANCE_TYPE
+              value: {{ .Values.unsupported.defaultPlan }}
+            - name: THEME_SECONDARY
+              value: {{ .Values.theme.secondary }}
+            - name: THEME_LOGO
+              value: {{ .Values.theme.logo }}
+          {{- if .Values.auth.google.enabled }}
+            - name: GOOGLE_CLIENTID
+              value: {{ .Values.auth.google.clientId }}
+          {{- else if .Values.auth.github.enabled }}
+            - name: GITHUB_CLIENTID
+              value: {{ .Values.auth.github.clientId }}
+            - name: GITHUB_SCOPE
+            {{- if .Values.auth.github.organization }}
+              value: "user:email,read:org"
+            {{- else }}
+              value: "user:email"
+            {{- end }}
+          {{- else if .Values.auth.bitbucket.enabled }}
+            - name: BITBUCKET_CLIENTID
+              value: {{ .Values.auth.bitbucket.clientId }}
+          {{- else if .Values.auth.openid.enabled }}
+            - name: OPENID_AUTH_ENDPOINT
+              value: {{ .Values.auth.openid.endpoints.authorization }}
+            - name: OPENID_CLIENTID
+              value: {{ .Values.auth.openid.clientId }}
+          {{- else if .Values.auth.token.enabled }}
+            - name: OKTETO_AUTH_TOKEN
+              value: "true"
+          {{- end }}
+            - name: MIXPANEL_TOKEN
+              value: {{ .Values.telemetry.token }}
+          {{- if .Values.unsupported.billing.enabled }}
+            - name: STRIPE_TOKEN
+              value: {{ .Values.unsupported.billing.publicApiKey }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: {{ .Values.frontend.port }}
+            initialDelaySeconds: 3
+            periodSeconds: 3
+            failureThreshold: 1
+          resources:
+{{ toYaml .Values.frontend.resources | indent 12 }}

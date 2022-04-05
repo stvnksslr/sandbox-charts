@@ -1,0 +1,18 @@
+dependencies:
+- name: ingress-nginx
+  repository: https://kubernetes.github.io/ingress-nginx
+  version: 4.0.11
+- name: nginx-ingress
+  repository: https://storage.googleapis.com/charts.okteto.com
+  version: 1.41.2
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v1.5.2
+- name: cert-manager-webhook-civo
+  repository: https://storage.googleapis.com/charts.okteto.com
+  version: 0.2.0
+- name: reloader
+  repository: https://stakater.github.io/stakater-charts
+  version: v0.0.99
+digest: sha256:a7c00f8e09023bb993c9de593301053ca3ed4b27b2826c028ccc938cd33c9e35
+generated: "2021-11-29T11:10:39.63933+01:00"

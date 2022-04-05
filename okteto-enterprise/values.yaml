@@ -1,0 +1,552 @@
+subdomain: localhost
+email: ""
+license: ""
+applications:
+  repository: https://apps.okteto.com
+quickstarts:
+- name: Movies Sample App
+  url: https://github.com/okteto/movies
+- name: Github
+  url: https://github.com/
+- name: Gitlab
+  url: https://gitlab.com/
+- name: Bitbucket
+  url: https://bitbucket.org/
+cluster:
+  endpoint: ""
+theme:
+  primary: null
+  seconday: null
+  logo: null
+auth:
+  google:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+    allowDomains: []
+  github:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+    organization: ""
+    allowList: []
+  bitbucket:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+    workspace: ""
+  openid:
+    enabled: false
+    clientId: ""
+    clientSecret: ""
+    endpoints:
+      issuer: ""
+      authorization: ""
+    group: ""
+    mapping:
+      externalIDKey: nickname
+      nameKey: name
+      emailKey: email
+      pictureKey: picture
+      groupsKey: groups
+  token:
+    enabled: false
+internalCertificate:
+  duration: 8760h0m0s
+wildcardCertificate:
+  create: false
+  duration: 2160h0m0s
+  name: default-ssl-certificate
+  privateCA:
+    enabled: false
+    secret:
+      name: okteto-ca
+      key: ca.crt
+cookie:
+  hash: null
+  secret: null
+cloud:
+  enabled: true
+  secret:
+    name: okteto-cloud-secret
+    key: key
+    token: token
+  provider:
+    aws:
+      enabled: false
+      region: us-west-2
+      bucket: null
+      iam:
+        enabled: true
+        accessKeyID: ""
+      role:
+        enabled: false
+        arn: ""
+        hostedZoneID: ""
+    byo:
+      enabled: false
+      issuerName: null
+      issuerKind: Issuer
+    civo:
+      enabled: false
+    digitalocean:
+      enabled: false
+      region: SFO1
+      space:
+        name: null
+        accessKeyID: null
+    gcp:
+      enabled: false
+      project: ""
+      bucket: null
+    azure:
+      enabled: false
+      servicePrincipal: ""
+      subscriptionID: ""
+      tenantID: ""
+      resourceGroupName: ""
+      storage:
+        container: ""
+        accountName: ""
+pullPolicy: IfNotPresent
+backend:
+  image:
+    registry: okteto/backend
+    tag: 1.12.25
+  bin:
+    image: null
+  cloudbin:
+    image: okteto/cloudbin:1.9.12
+  registryConfigurator:
+    image: okteto/registry-configurator:0.1.2
+  installer:
+    image: okteto/installer:1.3.0
+api:
+  annotations: {}
+  labels: {}
+  port: 8080
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 10m
+      memory: 15Mi
+    limits:
+      memory: 600Mi
+webhook:
+  hostNetwork: false
+  annotations: {}
+  labels: {}
+  replicaCount: 2
+  port: 443
+  resources:
+    requests:
+      cpu: 10m
+      memory: 10Mi
+frontend:
+  annotations: {}
+  labels: {}
+  image:
+    registry: okteto/frontend
+    tag: 1.12.25
+  replicaCount: 2
+  port: 8080
+  resources:
+    requests:
+      cpu: 10m
+      memory: 10Mi
+buildkit:
+  annotations: {}
+  labels: {}
+  enabled: true
+  image:
+    registry: okteto/buildkit
+    tag: v0.8.3-okteto8
+  rootless:
+    enabled: false
+    image:
+      registry: okteto/buildkit
+      tag: v0.8.3-okteto8-rootless
+  replicaCount: 1
+  hpa:
+    enabled: false
+    min: 1
+    max: 2
+    cpu: 50
+  podManagementPolicy: Parallel
+  ingress:
+    enabled: true
+  service:
+    type: ClusterIP
+    sessionAffinity: ClientIP
+    loadBalancerIP: null
+    labels: {}
+    annotations: {}
+  resources: {}
+  storage:
+    class: null
+    size: 300Gi
+    cache: 200000
+    accessModes:
+    - ReadWriteOnce
+    localSSD: false
+namespace:
+  annotations: {}
+  labels: {}
+registry:
+  annotations: {}
+  labels: {}
+  enabled: true
+  replicaCount: 1
+  port: 5000
+  pullPolicy: namespace
+  ingress:
+    enabled: true
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    tlsSecret: null
+  service:
+    type: ClusterIP
+    sessionAffinity: null
+    loadBalancerIP: null
+  image:
+    registry: okteto/registry
+    tag: a29a3c9
+  log:
+    level: info
+    formatter: json
+  storage:
+    filesystem:
+      enabled: false
+      persistence:
+        enabled: true
+        claimName: ""
+        accessMode: ReadWriteOnce
+        storageClass: ""
+        size: 40Gi
+    cloud:
+      enabled: true
+  resources: {}
+  serviceAccountName: default
+  haShared: okteto
+gc:
+  annotations: {}
+  labels: {}
+  enabled: true
+  scaleToZeroPeriod: 24
+  deleteNamespacePeriod: 15
+  slackWebhook: null
+  schedule: '@hourly'
+  timeoutInSeconds: 3300
+nodeReadinessChecker:
+  enabled: false
+  schedule: '*/1 * * * *'
+  components:
+  - daemon
+autoscaler:
+  annotations: {}
+  labels: {}
+  enabled: false
+  nodePoolLabel: null
+  schedule: 300
+  up: 0
+  down: 0
+  increment: 1
+  min: 1
+  max: 10
+  slackWebhook: null
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 15Mi
+  cpu:
+    up: 60
+    down: 40
+  memory:
+    up: 70
+    down: 50
+  pods:
+    up: 90
+    down: 80
+  volumes:
+    up: 90
+    down: 80
+migration:
+  annotations: {}
+  labels: {}
+  enabled: true
+  resources: {}
+telemetry:
+  annotations: {}
+  labels: {}
+  enabled: true
+  resources: {}
+daemonset:
+  annotations: {}
+  labels: {}
+  image: okteto/daemon:0.0.10
+clusterRole: cluster-admin
+convertLoadBalancedServices:
+  enabled: true
+imagePullSecrets: []
+secret:
+  annotations: {}
+  labels: {}
+podAnnotations: {}
+podLabels: {}
+privateRegistry: {}
+prepullImages:
+  enabled: true
+overrideRegistryResolution:
+  enabled: true
+overrideFileWatchers:
+  enabled: true
+  maxUserWatches: 10048576
+  maxMapCount: 262144
+  aioMaxNR: 1000000
+injectDevelopmentBinaries:
+  enabled: true
+tolerations:
+  oktetoPool: null
+  buildPool: null
+  devPool: null
+affinity:
+  required: false
+pullAlways:
+  enabled: true
+externalIPs:
+  enabled: true
+externalNames:
+  enabled: true
+networkPolicies:
+  enabled: false
+  blockedCIDRs:
+  - 169.254.169.254/32
+ingressLimits:
+  enabled: false
+  connections: 40
+  rps: 40
+  rpm: 400
+volumeSnapshots:
+  enabled: false
+  driver: null
+  class: null
+  storageClass: null
+devStorageClass:
+  enabled: false
+  storageClass: null
+quotas:
+  resources:
+    enabled: false
+    maxNamespaces: "3"
+    maxPods: "20"
+    maxServices: "20"
+    maxReplicationControllers: "30"
+    maxSecrets: "50"
+    maxConfigMaps: "50"
+    maxPVCs: "10"
+    maxVolumeSnapshots: "10"
+  bandwidth:
+    enabled: false
+    ingress: 800M
+    egress: 800M
+  requests:
+    enabled: false
+    cpu: "1"
+    memory: 2Gi
+    storage: 20Gi
+  limits:
+    enabled: false
+    cpu: "4"
+    memory: 8Gi
+    storage: 20Gi
+  limitranges:
+    max:
+      enabled: false
+      cpu: "3"
+      memory: 12Gi
+    requests:
+      enabled: true
+      limitRequestRatio: 1000
+      cpu: 100m
+      memory: 0.2Gi
+    limits:
+      enabled: true
+      cpu: "2"
+      memory: 8Gi
+ingress:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  class: nginx
+  forceIngressClass: false
+  ip: ""
+  tlsSecret: null
+nginx-ingress:
+  enabled: false
+ingress-nginx:
+  enabled: true
+  controller:
+    admissionWebhooks:
+      enabled: false
+    config:
+      annotation-value-word-blocklist: load_module,lua_package,_by_lua,root,serviceaccount
+    replicaCount: 2
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - controller
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - ingress-nginx
+            topologyKey: kubernetes.io/hostname
+    config:
+      ignore-invalid-headers: "false"
+      enable-underscores-in-headers: "true"
+      proxy-body-size: 60M
+      proxy-buffer-size: 64K
+    extraArgs:
+      default-ssl-certificate: $(POD_NAMESPACE)/default-ssl-certificate
+      tcp-services-configmap: $(POD_NAMESPACE)/tcp-services-configmap
+    service:
+      externalTrafficPolicy: Local
+      type: LoadBalancer
+  defaultBackend:
+    enabled: true
+    image:
+      repository: okteto/backend
+      tag: 1.12.25
+      pullPolicy: IfNotPresent
+    replicaCount: 2
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          podAffinityTerm:
+            labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - default-backend
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - ingress-nginx
+            topologyKey: kubernetes.io/hostname
+  tcp:
+    1234: buildkit-service-placeholder
+cert-manager:
+  enabled: false
+  fullnameOverride: cert-manager
+  webhook:
+    timeoutSeconds: 15
+  startupapicheck:
+    enabled: false
+debugServer:
+  enabled: false
+store:
+  personalAccessToken:
+    max: 5
+  provider:
+    k8s:
+      enabled: true
+    gcp:
+      enabled: false
+installer:
+  gitSSHUser: git
+  sshSecretName: okteto-ssh
+  activeDeadlineSeconds: 1800
+installerChecker:
+  enabled: true
+  schedule: '*/5 * * * *'
+github:
+  enabled: false
+reloader:
+  reloader:
+    enabled: true
+    watchGlobally: false
+    ignoreConfigMaps: true
+    serviceAccount:
+      create: true
+      name: reloader
+volumes:
+  validate:
+    enabled: false
+    supportedStorageClasses: []
+    forceStorageClass: false
+    supportedAccessModes: []
+autoAdmin:
+  enabled: true
+userDefinedNamespaces: true
+namespaceDestroyAll:
+  enabled: true
+  checker:
+    schedule: '*/3 * * * *'
+    timeoutInSeconds: 120
+checkCNIPodHealth:
+  enabled: false
+  restartCountThreshold: 3
+  backOffIntervalInMinutes: 1
+  slackWebhook: null
+unsupported:
+  signupRestrictions:
+    externalAccountMinimumCreationDays: 0
+    bannedEmailDomains: []
+  injectDockerconfigInGitDeploys: true
+  protectPersonalNamespace: true
+  autoSetDefaultLimits: false
+  maintenance: false
+  showVolumes: true
+  forcePodsInVolumeZone: true
+  ingressReloadDelay: 0
+  virtualServiceEndpoints: false
+  defaultPlan: enterprise
+  adminCanDeploy: false
+  billing:
+    annotations: {}
+    labels: {}
+    schedule: '@daily'
+    enabled: false
+    crm: {}
+  opentracing:
+    enabled: false
+    agent:
+      host: null
+      port: null
+    sampler:
+      type: const
+      param: 1
+  mailgun: {}
+  metricserverRbac:
+    enabled: false
+  privateEndpointsOverride:
+    enabled: false
+    port: 8080
+    resources: {}
+    replicaCount: 1
+    clientID: null
+    clientSecret: null
+  staticIPs: false
+  scaleDownPersistentResources: false
+  metrics:
+    enabled: false
+    url: null
+    headers: {}
+    events: {}
+  logsByStage:
+    enabled: false
+  teams:
+    enabled: false
+  userSettings:
+    enabled: false
+  automaticPreviews:
+    enabled: false

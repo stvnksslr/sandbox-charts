@@ -1,0 +1,21 @@
+{{- if eq .Values.persistence.claimName "" }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "valheim.fullname" . }}-config
+  labels:
+    app: {{ template "valheim.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.config.size | quote }}
+
+{{- if .Values.persistence.config.storageClassName }}
+  storageClassName: {{ .Values.persistence.config.storageClassName }}
+{{- end }}
+{{- end }}
