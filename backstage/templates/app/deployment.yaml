@@ -21,10 +21,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.dockerRegistrySecretName }}
+      {{- with .Values.app.image.pullSecrets }}
       imagePullSecrets:
-        - name: {{ .Values.dockerRegistrySecretName }}
-      {{- end}}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ include "backstage.appServiceAccountName" . }}
       {{- with .Values.app.podSecurityContext }}
       securityContext:
