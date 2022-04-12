@@ -132,6 +132,7 @@ data:
   "OKTETO_QUOTAS_RESOURCES_MAX_CONFIGMAPS": "{{ .Values.quotas.resources.maxConfigMaps }}"
   "OKTETO_QUOTAS_RESOURCES_MAX_PVCS":  "{{ .Values.quotas.resources.maxPVCs }}"
   "OKTETO_QUOTAS_RESOURCES_MAX_VOLUME_SNAPSHOTS": "{{ .Values.quotas.resources.maxVolumeSnapshots }}"
+  "OKTETO_QUOTAS_RESOURCES_MAX_INGRESSES": "{{ .Values.quotas.resources.maxIngresses }}"
 {{- end }}
   "OKTETO_QUOTAS_BANDWIDTH_ENABLED":  "{{ .Values.quotas.bandwidth.enabled }}"
 {{- if .Values.quotas.bandwidth.enabled }}
@@ -231,5 +232,6 @@ data:
 {{- end}}
   "OKTETO_LOGS_BY_STAGE_ENABLED": "{{ .Values.unsupported.logsByStage.enabled }}"
   "OKTETO_TEAMS_ENABLED": "{{ .Values.unsupported.teams.enabled }}"
-  "OKTETO_USER_SETTINGS_ENABLED": "{{ .Values.unsupported.userSettings.enabled }}"
   "OKTETO_AUTOMATIC_PREVIEWS_ENABLED": "{{ .Values.unsupported.automaticPreviews.enabled }}"
+  "OKTETO_NEW_ONBOARDING_ENABLED": "{{ .Values.unsupported.newOnboarding.enabled }}"
+  "OKTETO_PROMETHEUS_ENABLED": "{{ .Values.api.prometheus.enabled }}"

@@ -1,0 +1,15 @@
+suite: test backend deployment
+templates:
+  - ./backend/deployment.yaml
+tests:
+
+  - it: should work
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - isNotEmpty:
+          path: spec.template.metadata.annotations.[checksum/config]

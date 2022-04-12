@@ -45,6 +45,8 @@ spec:
                 type: string
               branch:
                 type: string
+              githubCommentId:
+                type: string
               filename:
                 type: string
               variables:

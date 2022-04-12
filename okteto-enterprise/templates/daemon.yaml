@@ -68,6 +68,7 @@ spec:
       {{- if .Values.injectDevelopmentBinaries.enabled }}
       - name: cloudbin
         image: {{ .Values.backend.cloudbin.image }}
+        imagePullPolicy: {{ .Values.pullPolicy }}
         securityContext:
           privileged: true
         command:

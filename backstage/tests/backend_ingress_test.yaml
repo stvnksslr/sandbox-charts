@@ -1,0 +1,114 @@
+suite: test backend ingress
+templates:
+  - ./backend/ingress.yaml
+tests:
+  - it: should work if 1.19 with networking.k8s.io/v1
+    set:
+      backend.ingress.enabled: true
+      backend.ingress.hosts: ["ingress.test"]
+    capabilities:
+      majorVersion: 1
+      minorVersion: 19
+      apiVersions:
+        - networking.k8s.io/v1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-backstage-backend
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: RELEASE-NAME-backstage-backend
+                port:
+                  number: 80
+      - isNull:
+          path: spec.tls
+  - it: should work if 1.19 with networking.k8s.io/v1beta1
+    set:
+      backend.ingress.enabled: true
+      backend.ingress.hosts: ["ingress.test"]
+    capabilities:
+      majorVersion: 1
+      minorVersion: 19
+      apiVersions:
+        - networking.k8s.io/v1beta1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: networking.k8s.io/v1beta1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-backstage-backend
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            path: /api/
+            pathType: Prefix
+            backend:
+              serviceName: RELEASE-NAME-backstage-backend
+              servicePort: http
+      - isNull:
+          path: spec.tls
+  - it: should work if 1.18 with extensions/v1beta1
+    set:
+      backend.ingress.enabled: true
+      backend.ingress.hosts: ["ingress.test"]
+    capabilities:
+      majorVersion: 1
+      minorVersion: 18
+      apiVersions:
+        - extensions/v1beta1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: extensions/v1beta1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-backstage-backend
+      - contains:
+          path: spec.rules[0].http.paths
+          content:
+            path: /api/
+            backend:
+              serviceName: RELEASE-NAME-backstage-backend
+              servicePort: http
+      - isNull:
+          path: spec.tls
+
+  - it: should set tls if given
+    set:
+      backend.ingress.enabled: true
+      backend.ingress.hosts: ["ingress.test"]
+      backend.ingress.tls:
+        - hosts: ["ingress.test"]
+          secretName: my-tls-secret
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-backstage-backend
+      - equal:
+          path: spec.tls
+          value:
+            - hosts: ["ingress.test"]
+              secretName: my-tls-secret
+
+  - it: should render nothing if not enabled
+    asserts:
+      - hasDocuments:
+          count: 0

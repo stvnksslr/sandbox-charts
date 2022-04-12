@@ -21,3 +21,10 @@
 .idea/
 *.tmproj
 .vscode/
+# Project files
+/README.md.gotmpl
+/*test-values.y*ml
+# ci values
+/ci
+# helm unittest
+/tests

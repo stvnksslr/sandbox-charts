@@ -68,5 +68,5 @@ spec:
               mountPath: /run/secrets/tls
               readOnly: true
           resources:
-{{ toYaml .Values.api.resources | indent 12 }}
+{{ toYaml .Values.migration.resources | indent 12 }}
 {{- end }}

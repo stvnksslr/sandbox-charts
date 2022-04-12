@@ -116,12 +116,14 @@ backend:
   bin:
     image: null
   cloudbin:
-    image: okteto/cloudbin:1.9.12
+    image: okteto/cloudbin:1.10.0
   registryConfigurator:
     image: okteto/registry-configurator:0.1.2
   installer:
-    image: okteto/installer:1.3.0
+    image: okteto/installer:1.4.1
 api:
+  prometheus:
+    enabled: false
   annotations: {}
   labels: {}
   port: 8080
@@ -129,9 +131,9 @@ api:
   resources:
     requests:
       cpu: 10m
-      memory: 15Mi
+      memory: 100Mi
     limits:
-      memory: 600Mi
+      memory: 800Mi
 webhook:
   hostNetwork: false
   annotations: {}
@@ -160,12 +162,12 @@ buildkit:
   enabled: true
   image:
     registry: okteto/buildkit
-    tag: v0.8.3-okteto8
+    tag: v0.9.3-okteto2
   rootless:
     enabled: false
     image:
       registry: okteto/buildkit
-      tag: v0.8.3-okteto8-rootless
+      tag: v0.9.3-okteto2-rootless
   replicaCount: 1
   hpa:
     enabled: false
@@ -181,7 +183,12 @@ buildkit:
     loadBalancerIP: null
     labels: {}
     annotations: {}
-  resources: {}
+  resources:
+    requests:
+      cpu: 1
+      memory: 4Gi
+    limits:
+      memory: 12Gi
   storage:
     class: null
     size: 300Gi
@@ -226,7 +233,10 @@ registry:
         size: 40Gi
     cloud:
       enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
   serviceAccountName: default
   haShared: okteto
 gc:
@@ -259,7 +269,7 @@ autoscaler:
   resources:
     requests:
       cpu: 10m
-      memory: 15Mi
+      memory: 100Mi
   cpu:
     up: 60
     down: 40
@@ -276,12 +286,18 @@ migration:
   annotations: {}
   labels: {}
   enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
 telemetry:
   annotations: {}
   labels: {}
   enabled: true
-  resources: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100Mi
 daemonset:
   annotations: {}
   labels: {}
@@ -347,6 +363,7 @@ quotas:
     maxConfigMaps: "50"
     maxPVCs: "10"
     maxVolumeSnapshots: "10"
+    maxIngresses: "20"
   bandwidth:
     enabled: false
     ingress: 800M
@@ -478,6 +495,10 @@ reloader:
     serviceAccount:
       create: true
       name: reloader
+    resources:
+      requests:
+        cpu: 10m
+        memory: 10Mi
 volumes:
   validate:
     enabled: false
@@ -546,7 +567,7 @@ unsupported:
     enabled: false
   teams:
     enabled: false
-  userSettings:
-    enabled: false
   automaticPreviews:
+    enabled: false
+  newOnboarding:
     enabled: false

@@ -54,5 +54,6 @@ spec:
                 - secretRef:
                     name: "{{ .Values.cloud.secret.name }}"
                     optional: true
-
+              resources:
+{{ toYaml .Values.telemetry.resources | indent 16 }}
 {{- end}}
