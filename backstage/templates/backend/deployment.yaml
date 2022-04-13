@@ -85,7 +85,7 @@ spec:
             {{- toYaml .Values.backend.readinessProbe | nindent 12 }}
           volumeMounts:
             {{- if .Values.postgresCertMountEnabled }}
-            - name: postgres-ca
+            - name: backstage-postgres-ca
               mountPath: /etc/postgresql
             {{- end }}
             - mountPath: /app/app-config.yaml
