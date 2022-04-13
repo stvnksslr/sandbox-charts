@@ -45,3 +45,41 @@ Create config name.
 {{- define "backstage.backendConfigName" -}}
 {{- template "backstage.backendFullname" . -}}-app-config
 {{- end -}}
+
+
+{{/*
+Path to the CA certificate file in the backend
+*/}}
+{{- define "backstage.backend.postgresCaFilename" -}}
+{{ include "backstage.backend.postgresCaDir" . }}/{{- required "The name for the CA certificate file for postgresql is required" .Values.global.postgresql.caFilename }}
+{{- end -}}
+{{/*
+
+{{/*
+Directory path to the CA certificate file in the backend
+*/}}
+{{- define "backstage.backend.postgresCaDir" -}}
+{{- if .Values.appConfig.backend.database.connection.ssl.ca -}}
+    {{ .Values.appConfig.backend.database.connection.ssl.ca }}
+{{- else -}}
+/etc/postgresql
+{{- end -}}
+{{- end -}}
+{{/*
+
+Path to the CA certificate file in lighthouse
+*/}}
+{{- define "backstage.lighthouse.postgresCaFilename" -}}
+{{ include "backstage.lighthouse.postgresCaDir" . }}/{{- required "The name for the CA certificate file for postgresql is required" .Values.global.postgresql.caFilename }}
+{{- end -}}
+
+{{/*
+Directory path to the CA certificate file in lighthouse
+*/}}
+{{- define "backstage.lighthouse.postgresCaDir" -}}
+{{- if .Values.lighthouse.database.pathToDatabaseCa -}}
+    {{ .Values.lighthouse.database.pathToDatabaseCa }}
+{{- else -}}
+/etc/postgresql
+{{- end -}}
+{{- end -}}
