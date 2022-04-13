@@ -11,9 +11,10 @@ metadata:
 spec:
   type: {{ .Values.app.service.type }}
   ports:
-    - port: {{ .Values.app.service.port }}
-      targetPort: http
+    - name: http
+      port: {{ .Values.app.service.port }}
+      targetPort: {{ .Values.app.service.targetPort }}
       protocol: TCP
-      name: http
+
   selector:
     {{- include "backstage.appSelectorLabels" . | nindent 4 }}

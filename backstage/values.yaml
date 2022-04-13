@@ -61,6 +61,7 @@ app:
     annotations: {}
     # --  Service port.
     port: 80
+    targetPort: 80
 
   ingress:
     # -- App if `true`, create an ingress object.
@@ -169,6 +170,7 @@ backend:
     annotations: {}
     # --  Service port.
     port: 80
+    targetPort: 80
 
   ingress:
     # -- Backend if `true`, create an ingress object.

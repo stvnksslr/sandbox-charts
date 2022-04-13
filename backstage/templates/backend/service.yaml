@@ -11,9 +11,9 @@ metadata:
 spec:
   type: {{ .Values.backend.service.type }}
   ports:
-    - port: {{ .Values.backend.service.port }}
-      targetPort: http
+    - name: http
+      port: {{ .Values.backend.service.port }}
+      targetPort: {{ .Values.backend.service.targetPort }}
       protocol: TCP
-      name: http
   selector:
     {{- include "backstage.backendSelectorLabels" . | nindent 4 }}
