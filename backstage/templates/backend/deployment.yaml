@@ -86,7 +86,7 @@ spec:
           volumeMounts:
             {{- if .Values.backend.postgresCertMountEnabled }}
             - name: postgres-ca
-              mountPath: {{ include "backstage.backend.postgresCaDir" . }}
+              mountPath: /etc/postgresql
             {{- end }}
             - mountPath: /app/app-config.yaml
               name: config
@@ -99,7 +99,7 @@ spec:
         {{- if .Values.backend.postgresCertMountEnabled }}
         - name: postgres-ca
           configMap:
-            name: {{ include "backstage.fullname" . }}-postgres-ca
+            name: backstage-postgres-ca
         {{- end }}
         - name: config
           configMap:
