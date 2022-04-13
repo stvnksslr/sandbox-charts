@@ -87,9 +87,10 @@ spec:
             {{- if .Values.postgresCertMountEnabled }}
             - name: postgres-ca
               mountPath: /etc/postgresql
+              subPath: ca.crt
             {{- end }}
-            - mountPath: /app/app-config.yaml
-              name: config
+            - name: config
+              mountPath: /app/app-config.yaml
               subPath: app-config.yaml
           {{- with .Values.backend.resources }}
           resources:
