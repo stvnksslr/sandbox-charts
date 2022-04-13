@@ -84,6 +84,10 @@ spec:
           readinessProbe:
             {{- toYaml .Values.backend.readinessProbe | nindent 12 }}
           volumeMounts:
+            {{- if .Values.backend.postgresCertMountEnabled }}
+            - name: postgres-ca
+              mountPath: {{ include "backstage.backend.postgresCaDir" . }}
+            {{- end }}
             - mountPath: /app/app-config.yaml
               name: config
               subPath: app-config.yaml
@@ -92,6 +96,11 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
+        {{- if .Values.backend.postgresCertMountEnabled }}
+        - name: postgres-ca
+          configMap:
+            name: {{ include "backstage.fullname" . }}-postgres-ca
+        {{- end }}
         - name: config
           configMap:
             name: {{ include "backstage.backendConfigName" . }}
