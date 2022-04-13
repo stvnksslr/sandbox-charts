@@ -84,7 +84,7 @@ spec:
           readinessProbe:
             {{- toYaml .Values.backend.readinessProbe | nindent 12 }}
           volumeMounts:
-            {{- if .Values.backend.postgresCertMountEnabled }}
+            {{- if .Values.postgresCertMountEnabled }}
             - name: postgres-ca
               mountPath: /etc/postgresql
             {{- end }}

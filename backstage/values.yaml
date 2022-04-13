@@ -207,11 +207,6 @@ psql:
   #   secret: backstage-postgres
   #   key: password
 
-
-global:
-  postgresql:
-    caFilename: ca.crt
-
 postgresql:
   enabled: false
 
