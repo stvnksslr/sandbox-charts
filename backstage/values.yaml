@@ -1,6 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
-
+postgresCertMountEnabled: true
 
 app:
   image:
@@ -94,7 +94,6 @@ app:
   env: []
 
 backend:
-  postgresCertMountEnabled: false
   image:
     # -- Backend image repository.
     repository: ghcr.io/stvnksslr/sandbox-backstage/backend:latest

@@ -97,7 +97,7 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
       volumes:
-        {{- if .Values.backend.postgresCertMountEnabled }}
+        {{- if .Values.postgresCertMountEnabled }}
         - name: postgres-ca
           configMap:
             name: backstage-postgres-ca
