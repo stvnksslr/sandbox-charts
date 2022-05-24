@@ -7,6 +7,9 @@ metadata:
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    {{- with .Values.controller.admissionWebhooks.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   labels:
     {{- include "ingress-nginx.labels" . | nindent 4 }}
     app.kubernetes.io/component: admission-webhook
@@ -71,4 +74,5 @@ spec:
       securityContext:
         runAsNonRoot: true
         runAsUser: {{ .Values.controller.admissionWebhooks.patch.runAsUser }}
+        fsGroup: {{ .Values.controller.admissionWebhooks.patch.fsGroup }}
 {{- end }}

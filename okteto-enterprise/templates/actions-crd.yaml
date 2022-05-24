@@ -14,7 +14,7 @@ spec:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: Action represents a pending execution of a gitDEploy operation
+        description: Action represents a pending execution of a gitDeploy operation
         type: object
         properties:
           apiVersion:
@@ -47,6 +47,12 @@ spec:
                 type: string
               githubCommentId:
                 type: string
+              commitSha:
+                type: string
+              source:
+                type: string
+              belongsToPreview:
+                type: boolean
               filename:
                 type: string
               variables:

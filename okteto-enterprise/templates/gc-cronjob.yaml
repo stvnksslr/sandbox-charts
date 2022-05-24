@@ -1,4 +1,5 @@
-apiVersion: batch/v1beta1
+{{- if .Values.gc.enabled }}
+apiVersion: {{ template "okteto.cronJob.apiVersion" . }}
 kind: CronJob
 metadata:
   name: "{{ include "okteto.fullname" . }}-gc"
@@ -41,6 +42,9 @@ spec:
   {{- end }}
 {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 14 }}
           serviceAccountName: {{ include "okteto.fullname" . }}
           {{- if .Values.tolerations.oktetoPool }}
           tolerations:
@@ -74,3 +78,4 @@ spec:
                 - name: tls-certs
                   mountPath: /run/secrets/tls
                   readOnly: true
+{{- end }}

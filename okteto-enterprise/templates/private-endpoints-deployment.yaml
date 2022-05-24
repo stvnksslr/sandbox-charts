@@ -38,8 +38,13 @@ spec:
 {{- if .Values.podAnnotations }}
 {{ toYaml .Values.podAnnotations | indent 8 }}
 {{- end }}
+{{- if .Values.unsupported.privateEndpointsOverride.annotations }}
+{{ toYaml .Values.unsupported.privateEndpointsOverride.annotations | indent 8 }}
+{{- end }}
     spec:
       affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
         podAntiAffinity:
           {{- if .Values.affinity.required }}
           requiredDuringSchedulingIgnoredDuringExecution:

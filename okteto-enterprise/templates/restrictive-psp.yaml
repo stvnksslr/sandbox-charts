@@ -30,8 +30,6 @@ spec:
   allowedHostPaths:
     - pathPrefix: "/var/okteto/bin"
       readOnly: true
-    - pathPrefix: "/var/okteto/cloudbin"
-      readOnly: true
   volumes:
   - hostPath
   - configMap

@@ -35,6 +35,9 @@ rules:
   - serviceaccounts
   - persistentvolumeclaims
   - replicationcontrollers
+{{- if .Values.unsupported.divertEndpoints }}
+  - endpoints
+{{- end }}
   verbs:
   - '*'
 - apiGroups:

@@ -186,6 +186,17 @@ Return the appropriate apiVersion for networkPolicies.
 {{- end -}}
 
 {{/*
+Return the appropriate apiVersion for CronJob.
+*/}}
+{{- define "okteto.cronJob.apiVersion" -}}
+{{- if semverCompare "<1.21-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- print "batch/v1beta1" -}}
+{{- else -}}
+{{- print "batch/v1" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 The default public URL of buildkit
 */}}
 {{- define "okteto.buildkit" -}}
@@ -249,8 +260,6 @@ The default public URL of buildkit
 {{- else if .Values.overrideRegistryResolution.enabled }}
 {{- print true }}
 {{- else if .Values.overrideFileWatchers.enabled }}
-{{- print true }}
-{{- else if .Values.injectDevelopmentBinaries.enabled }}
 {{- print true }}
 {{- else if .Values.privateRegistry }}
 {{- print true }}

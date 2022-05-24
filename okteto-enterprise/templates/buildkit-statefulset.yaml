@@ -50,6 +50,8 @@ spec:
 {{- end }}
     spec:
       affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
         podAntiAffinity:
           {{- if .Values.affinity.required }}
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -106,23 +108,6 @@ spec:
         image: {{ .Values.buildkit.image.registry}}:{{ .Values.buildkit.image.tag}}
         imagePullPolicy: {{ .Values.pullPolicy }}
       {{- end }}
-        readinessProbe:
-          exec:
-            command:
-              - buildctl
-              - --addr
-              - "tcp://local-buildkitd.{{ .Values.subdomain }}:1234"
-              - --tlscacert
-       {{- if .Values.wildcardCertificate.privateCA.enabled }}
-              - /etc/ssl/certs/okteto-private-ca.crt
-       {{- else }}
-              - /etc/ssl/certs/ca-certificates.crt
-       {{- end }}
-              - debug
-              - workers
-          initialDelaySeconds: 5
-          periodSeconds: 30
-          timeoutSeconds: 10
         livenessProbe:
           exec:
             command:
@@ -133,9 +118,9 @@ spec:
               {{- else }}
               - "if [ $(df -Ph /var/lib/buildkit | awk {'print $5'} | grep -vE Capacity | cut -f1 -d '%') -gt 80 ]; then exit 1; fi"
               {{- end }}
-          timeoutSeconds: 5
-          initialDelaySeconds: 300
+          initialDelaySeconds: 5
           periodSeconds: 30
+          timeoutSeconds: 10
           failureThreshold: 1
         command:
           - /usr/bin/start.sh

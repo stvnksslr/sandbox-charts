@@ -46,6 +46,8 @@ spec:
     spec:
       terminationGracePeriodSeconds: 300
       affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
         podAntiAffinity:
           {{- if .Values.affinity.required }}
           requiredDuringSchedulingIgnoredDuringExecution:

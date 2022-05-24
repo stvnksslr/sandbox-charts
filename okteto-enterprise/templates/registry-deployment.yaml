@@ -47,6 +47,8 @@ spec:
 {{- end }}
     spec:
       affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
         podAntiAffinity:
           {{- if .Values.affinity.required }}
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -69,7 +71,11 @@ spec:
                         - "{{ include "okteto.fullname" . }}-registry"
                 topologyKey: kubernetes.io/hostname
           {{- end }}
+      {{- if .Values.registry.serviceAccount.create }}
+      serviceAccountName: "{{ include "okteto.fullname" . }}-registry"
+      {{- else }}
       serviceAccountName: {{ .Values.registry.serviceAccountName }}
+      {{- end }}
   {{- if .Values.tolerations.buildPool }}
       tolerations:
       - key: "okteto-node-pool"
@@ -96,7 +102,7 @@ spec:
           secret:
             defaultMode: 420
             secretName: {{ include "okteto.ingress.tlsSecret" . }}
-  {{- if .Values.cloud.provider.gcp.enabled }}
+  {{- if and .Values.cloud.provider.gcp.enabled (not .Values.cloud.provider.gcp.workloadIdentity.enabled) }}
         - name: gcs-account
           secret:
             defaultMode: 420
@@ -149,8 +155,10 @@ spec:
     {{- if .Values.cloud.provider.gcp.enabled }}
             - name: REGISTRY_STORAGE_GCS_BUCKET
               value: {{ required "A valid .Values.cloud.provider.gcp.bucket is required" .Values.cloud.provider.gcp.bucket }}
+      {{- if not .Values.cloud.provider.gcp.workloadIdentity.enabled }}
             - name: REGISTRY_STORAGE_GCS_KEYFILE
               value: /run/secrets/gcs/key
+      {{- end}}
     {{- else if .Values.cloud.provider.azure.enabled }}
             - name: REGISTRY_STORAGE_AZURE_CONTAINER
               value: {{ required "A valid .Values.cloud.provider.azure.storage.container is required" .Values.cloud.provider.azure.storage.container }}
@@ -202,7 +210,7 @@ spec:
             - name: data
               mountPath: /var/lib/registry/
             {{- end }}
-            {{- if .Values.cloud.provider.gcp.enabled }}
+            {{- if and .Values.cloud.provider.gcp.enabled (not .Values.cloud.provider.gcp.workloadIdentity.enabled) }}
             - name: gcs-account
               mountPath: /run/secrets/gcs/
               readOnly: true

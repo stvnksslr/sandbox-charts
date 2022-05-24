@@ -13,6 +13,7 @@ reloader:
   isOpenshift: false
   ignoreSecrets: false
   ignoreConfigMaps: false
+  reloadStrategy: default # Set to default, env-vars or annotations
   ignoreNamespaces: "" # Comma separated list of namespaces to ignore
   logFormat: "" #json
   watchGlobally: true
@@ -52,10 +53,10 @@ reloader:
     labels:
       provider: stakater
       group: com.stakater.platform
-      version: v0.0.99
+      version: v0.0.104
     image:
       name: stakater/reloader
-      tag: v0.0.99
+      tag: v0.0.104
       pullPolicy: IfNotPresent
     # Support for extra environment variables.
     env:

@@ -9,6 +9,8 @@ metadata:
     helm.sh/chart: {{ include "okteto.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    secret.reloader.stakater.com/reload: "{{ include "okteto.internalCertificate" . }}"
 spec:
   strategy:
     type: RollingUpdate
@@ -43,6 +45,8 @@ spec:
 {{- end }}
     spec:
       affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
         podAntiAffinity:
           {{- if .Values.affinity.required }}
           requiredDuringSchedulingIgnoredDuringExecution:

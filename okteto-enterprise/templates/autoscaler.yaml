@@ -1,4 +1,3 @@
-{{- if .Values.autoscaler.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,6 +37,9 @@ spec:
 {{ toYaml .Values.autoscaler.annotations | indent 8 }}
 {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
       serviceAccountName: {{ include "okteto.fullname" . }}
       {{- if .Values.tolerations.oktetoPool }}
       tolerations:
@@ -69,4 +71,3 @@ spec:
               readOnly: true
           resources:
 {{ toYaml .Values.autoscaler.resources | indent 12 }}
-{{- end }}

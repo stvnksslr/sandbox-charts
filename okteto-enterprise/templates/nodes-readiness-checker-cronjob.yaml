@@ -1,5 +1,5 @@
 {{- if .Values.nodeReadinessChecker.enabled }}
-apiVersion: batch/v1beta1
+apiVersion: {{ template "okteto.cronJob.apiVersion" . }}
 kind: CronJob
 metadata:
   name: "{{ include "okteto.fullname" . }}-nodes-readiness"
@@ -33,6 +33,9 @@ spec:
 {{ toYaml .Values.podAnnotations | indent 12 }}
 {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 14 }}
           serviceAccountName: {{ include "okteto.fullname" . }}
           {{- if .Values.tolerations.oktetoPool }}
           tolerations:

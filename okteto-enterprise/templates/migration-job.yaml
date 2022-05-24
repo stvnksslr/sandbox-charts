@@ -34,6 +34,9 @@ spec:
   {{- end }}
 {{- end }}
     spec:
+      affinity:
+        nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 10 }}
       restartPolicy: Never
       serviceAccountName: {{ include "okteto.fullname" . }}
       {{- if .Values.tolerations.oktetoPool }}

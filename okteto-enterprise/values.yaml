@@ -4,8 +4,6 @@ license: ""
 applications:
   repository: https://apps.okteto.com
 quickstarts:
-- name: Movies Sample App
-  url: https://github.com/okteto/movies
 - name: Github
   url: https://github.com/
 - name: Gitlab
@@ -99,6 +97,8 @@ cloud:
       enabled: false
       project: ""
       bucket: null
+      workloadIdentity:
+        enabled: false
     azure:
       enabled: false
       servicePrincipal: ""
@@ -112,15 +112,15 @@ pullPolicy: IfNotPresent
 backend:
   image:
     registry: okteto/backend
-    tag: 1.12.25
-  bin:
-    image: null
-  cloudbin:
-    image: okteto/cloudbin:1.10.0
+    tag: 1.12.95-6a720b79
   registryConfigurator:
     image: okteto/registry-configurator:0.1.2
+  bin:
+    image: null
+  pipelineInstaller:
+    image: okteto/installer:1.4.13
   installer:
-    image: okteto/installer:1.4.1
+    image: okteto/pipeline-runner:1.0.0
 api:
   prometheus:
     enabled: false
@@ -140,6 +140,7 @@ webhook:
   labels: {}
   replicaCount: 2
   port: 443
+  timeout: 30
   resources:
     requests:
       cpu: 10m
@@ -149,7 +150,7 @@ frontend:
   labels: {}
   image:
     registry: okteto/frontend
-    tag: 1.12.25
+    tag: 1.12.95-6a720b79
   replicaCount: 2
   port: 8080
   resources:
@@ -162,12 +163,12 @@ buildkit:
   enabled: true
   image:
     registry: okteto/buildkit
-    tag: v0.9.3-okteto2
+    tag: v0.9.3-okteto4
   rootless:
     enabled: false
     image:
       registry: okteto/buildkit
-      tag: v0.9.3-okteto2-rootless
+      tag: v0.9.3-okteto4-rootless
   replicaCount: 1
   hpa:
     enabled: false
@@ -238,7 +239,19 @@ registry:
       cpu: 10m
       memory: 100Mi
   serviceAccountName: default
+  serviceAccount:
+    create: false
+    annotations: {}
   haShared: okteto
+  gc:
+    enabled: false
+    annotations: {}
+    labels: {}
+    schedule: '@hourly'
+    timeoutInSeconds: 3300
+    metrics:
+      enabled: false
+      pushgatewayAddr: null
 gc:
   annotations: {}
   labels: {}
@@ -301,8 +314,9 @@ telemetry:
 daemonset:
   annotations: {}
   labels: {}
-  image: okteto/daemon:0.0.10
+  image: okteto/daemon:0.0.13
 clusterRole: cluster-admin
+globalClusterRole: ""
 convertLoadBalancedServices:
   enabled: true
 imagePullSecrets: []
@@ -321,17 +335,22 @@ overrideFileWatchers:
   maxUserWatches: 10048576
   maxMapCount: 262144
   aioMaxNR: 1000000
-injectDevelopmentBinaries:
-  enabled: true
 tolerations:
   oktetoPool: null
   buildPool: null
   devPool: null
+affinities:
+  devPool: null
 affinity:
   required: false
+  nodeAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - preference:
+        matchExpressions:
+        - key: dev.okteto.com/overloaded
+          operator: DoesNotExist
+      weight: 50
 pullAlways:
-  enabled: true
-externalIPs:
   enabled: true
 externalNames:
   enabled: true
@@ -364,10 +383,16 @@ quotas:
     maxPVCs: "10"
     maxVolumeSnapshots: "10"
     maxIngresses: "20"
+    maxJobs: "20"
+    maxCronjobs: "20"
   bandwidth:
     enabled: false
     ingress: 800M
     egress: 800M
+    up:
+      enabled: false
+      ingress: 800M
+      egress: 800M
   requests:
     enabled: false
     cpu: "1"
@@ -399,17 +424,20 @@ ingress:
   forceIngressClass: false
   ip: ""
   tlsSecret: null
-nginx-ingress:
-  enabled: false
 ingress-nginx:
   enabled: true
   controller:
     admissionWebhooks:
       enabled: false
-    config:
-      annotation-value-word-blocklist: load_module,lua_package,_by_lua,root,serviceaccount
     replicaCount: 2
     affinity:
+      nodeAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchExpressions:
+            - key: dev.okteto.com/overloaded
+              operator: DoesNotExist
+          weight: 50
       podAntiAffinity:
         preferredDuringSchedulingIgnoredDuringExecution:
         - weight: 100
@@ -426,9 +454,17 @@ ingress-nginx:
                 - ingress-nginx
             topologyKey: kubernetes.io/hostname
     config:
+      annotation-value-word-blocklist: load_module,lua_package,_by_lua,root,serviceaccount
+      log-format-escape-json: "true"
+      log-format-upstream: '{"time": "$time_iso8601", "remote_addr": "$remote_addr",
+        "x_forward_for": "$proxy_add_x_forwarded_for", "request_id": "$req_id", "remote_user":
+        "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time,
+        "status": $status, "vhost": "$host", "request_proto": "$server_protocol",
+        "path": "$uri", "request_query": "$args", "request_length": $request_length,
+        "duration": $request_time,"method": "$request_method", "http_referrer": "$http_referer",
+        "http_user_agent": "$http_user_agent" }'
       ignore-invalid-headers: "false"
       enable-underscores-in-headers: "true"
-      proxy-body-size: 60M
       proxy-buffer-size: 64K
     extraArgs:
       default-ssl-certificate: $(POD_NAMESPACE)/default-ssl-certificate
@@ -440,7 +476,7 @@ ingress-nginx:
     enabled: true
     image:
       repository: okteto/backend
-      tag: 1.12.25
+      tag: 1.12.95-6a720b79
       pullPolicy: IfNotPresent
     replicaCount: 2
     affinity:
@@ -487,6 +523,11 @@ installerChecker:
   schedule: '*/5 * * * *'
 github:
   enabled: false
+maxTerminationGracePeriodSeconds:
+  enabled: false
+  limit: 30
+userPodAffinity:
+  enabled: false
 reloader:
   reloader:
     enabled: true
@@ -509,7 +550,6 @@ autoAdmin:
   enabled: true
 userDefinedNamespaces: true
 namespaceDestroyAll:
-  enabled: true
   checker:
     schedule: '*/3 * * * *'
     timeoutInSeconds: 120
@@ -519,19 +559,28 @@ checkCNIPodHealth:
   backOffIntervalInMinutes: 1
   slackWebhook: null
 unsupported:
+  ingressProxyBodySize: 60M
   signupRestrictions:
     externalAccountMinimumCreationDays: 0
     bannedEmailDomains: []
+    waitlistActivator:
+      annotations: {}
+      labels: {}
+      enabled: false
+      schedule: '@hourly'
   injectDockerconfigInGitDeploys: true
   protectPersonalNamespace: true
   autoSetDefaultLimits: false
   maintenance: false
   showVolumes: true
   forcePodsInVolumeZone: true
+  divertEndpoints: false
   ingressReloadDelay: 0
   virtualServiceEndpoints: false
   defaultPlan: enterprise
   adminCanDeploy: false
+  crm:
+    previewsWorkflowId: ""
   billing:
     annotations: {}
     labels: {}
@@ -556,6 +605,7 @@ unsupported:
     replicaCount: 1
     clientID: null
     clientSecret: null
+    annotations: {}
   staticIPs: false
   scaleDownPersistentResources: false
   metrics:
@@ -567,7 +617,9 @@ unsupported:
     enabled: false
   teams:
     enabled: false
+    createTeamFlow: false
   automaticPreviews:
     enabled: false
   newOnboarding:
     enabled: false
+  allowDaemonsetsForUsers: false

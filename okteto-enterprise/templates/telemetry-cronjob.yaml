@@ -1,5 +1,5 @@
 {{- if .Values.telemetry.enabled }}
-apiVersion: batch/v1beta1
+apiVersion: {{ template "okteto.cronJob.apiVersion" . }}
 kind: CronJob
 metadata:
   name: "{{ include "okteto.fullname" . }}-telemetry"
@@ -39,6 +39,9 @@ spec:
   {{- end }}
 {{- end }}
         spec:
+          affinity:
+            nodeAffinity:
+{{ toYaml .Values.affinity.nodeAffinity | indent 14 }}
           serviceAccountName: {{ include "okteto.fullname" . }}
           restartPolicy: Never
           containers:

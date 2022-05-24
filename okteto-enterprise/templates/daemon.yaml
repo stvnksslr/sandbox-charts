@@ -43,13 +43,30 @@ spec:
       terminationGracePeriodSeconds: 0
       serviceAccountName: {{ include "okteto.fullname" . }}
       {{- if .Values.tolerations.devPool }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: okteto-node-pool
+                    operator: In
+                    values:
+                    - "{{ .Values.tolerations.devPool }}"
+                    {{- if .Values.tolerations.teamsPool }}
+                    - "{{ .Values.tolerations.teamsPool }}"
+                    {{- end }}
+              topologyKey: kubernetes.io/hostname
       tolerations:
         - key: "okteto-node-pool"
           operator: "Equal"
           value: "{{ .Values.tolerations.devPool }}"
           effect: "NoSchedule"
-      nodeSelector:
-        okteto-node-pool: "{{ .Values.tolerations.devPool }}"
+      {{- if .Values.tolerations.teamsPool }}
+        - key: "okteto-node-pool"
+          operator: "Equal"
+          value: "{{ .Values.tolerations.teamsPool }}"
+          effect: "NoSchedule"
+      {{- end }}
       {{- end }}
       initContainers:
       {{- if .Values.backend.bin.image }}
@@ -64,20 +81,6 @@ spec:
         volumeMounts:
           - mountPath: /var/okteto/bin
             name: okteto-bin
-      {{- end }}
-      {{- if .Values.injectDevelopmentBinaries.enabled }}
-      - name: cloudbin
-        image: {{ .Values.backend.cloudbin.image }}
-        imagePullPolicy: {{ .Values.pullPolicy }}
-        securityContext:
-          privileged: true
-        command:
-          - /bin/sh
-          - -c
-          - "rm -f /var/okteto/cloudbin/start.sh && cp /usr/local/bin/* /var/okteto/cloudbin"
-        volumeMounts:
-          - mountPath: /var/okteto/cloudbin
-            name: okteto-cloudbin
       {{- end }}
       containers:
       - name: daemon
@@ -146,11 +149,6 @@ spec:
       - name: okteto-bin
         hostPath:
           path: /var/okteto/bin
-      {{- end }}
-      {{- if .Values.injectDevelopmentBinaries.enabled }}
-      - name: okteto-cloudbin
-        hostPath:
-          path: /var/okteto/cloudbin
       {{- end }}
       {{- if .Values.privateRegistry }}
       - name: kubelet-conf
