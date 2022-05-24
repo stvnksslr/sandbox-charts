@@ -52,7 +52,7 @@ auth:
 internalCertificate:
   duration: 8760h0m0s
 wildcardCertificate:
-  create: false
+  create: true
   duration: 2160h0m0s
   name: default-ssl-certificate
   privateCA:
@@ -498,7 +498,7 @@ ingress-nginx:
   tcp:
     1234: buildkit-service-placeholder
 cert-manager:
-  enabled: false
+  enabled: true
   fullnameOverride: cert-manager
   webhook:
     timeoutSeconds: 15
