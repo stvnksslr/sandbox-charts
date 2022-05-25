@@ -499,7 +499,6 @@ ingress-nginx:
     1234: buildkit-service-placeholder
 cert-manager:
   enabled: true
-  install: false
   fullnameOverride: cert-manager
   webhook:
     timeoutSeconds: 15
