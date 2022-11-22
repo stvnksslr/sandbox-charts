@@ -52,7 +52,8 @@ spec:
           value: {{ .Values.valheimServer.status | quote}}
         - name: STATUS_HTTP_PORT
           value: {{ .Values.valheimServer.statusPort | quote}}
-
+        - name: STEAMCMD_ARGS
+          value: {{ .Values.valheimServer.steamArgs }}
         {{- if eq .Values.valheimServer.mods.bepinex true }}
         - name: BEPINEX
           value: "true"

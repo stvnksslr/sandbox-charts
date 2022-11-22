@@ -25,6 +25,7 @@ valheimServer:
   status: false
   statusPort: 8080
   admins: []
+  steamArgs: ""
 
   mods:
     bepinex: false
