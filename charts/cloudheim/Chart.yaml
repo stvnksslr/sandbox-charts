@@ -1,6 +1,6 @@
 apiVersion: v2
 name: cloudheim
-version: 1.3.2
+version: 1.3.3
 appVersion: 0.212.6
 description: Valheim dedicated server.
 keywords:
