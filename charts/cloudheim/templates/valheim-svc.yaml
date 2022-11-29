@@ -26,11 +26,11 @@ spec:
     protocol: UDP
     {{- if eq .Values.networking.serviceType "NodePort" }}
     nodePort: {{ default "" (.Values.networking.nodePort | int | add 1) }}
+    {{ end }}
   - name: statusport
-    port: {{ .Values.networking.gamePort | int }}
-    targetPort: {{ .Values.networking.gamePort }}
+    port: {{ .Values.networking.statusPort | int }}
+    targetPort: {{ .Values.networking.statusPort }}
     protocol: TCP
-  {{ end }}
   type: {{ .Values.networking.serviceType }}
   selector:
     app: {{ template "valheim.fullname" . }}
