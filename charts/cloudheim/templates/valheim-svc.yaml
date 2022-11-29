@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "valheim.fullname" . }}
+  annotations:
+{{ toYaml .Values.networking.annotations | indent 4 }}
   labels:
     app: {{ template "valheim.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"

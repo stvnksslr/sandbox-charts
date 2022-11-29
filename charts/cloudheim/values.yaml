@@ -34,7 +34,8 @@ networking:
   gamePort: 2456
   nodePort: 30373
   statusPort: 8080
-
+  annotations: []
+  
 persistence:
   config:
     enabled: true
