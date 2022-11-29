@@ -29,4 +29,4 @@ spec:
   {{ end }}
   type: {{ .Values.networking.serviceType }}
   selector:
-    app: {{ .Release.Name }}
+    app: {{ template "valheim.fullname" . }}
