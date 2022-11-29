@@ -1,0 +1,42 @@
+apiVersion: v1
+entries:
+  backstage:
+  - apiVersion: v2
+    appVersion: main
+    created: "2022-11-29T01:33:13.61459529Z"
+    description: Helm chart for Backstage. Backstage is an open platform for building
+      developer portals.
+    digest: 01d3cb0b3100bdba665c1bce3a269b88d420fbe24c800d5bcaa7023dec290b03
+    home: https://backstage.io
+    icon: https://backstage.io/img/twitter-summary.png
+    keywords:
+    - backstage
+    maintainers:
+    - email: stvnksslr@gmail.com
+      name: stvnksslr
+    name: backstage
+    sources:
+    - https://github.com/backstage/backstage
+    - https://github.com/mcwarman/backstage-sample-app
+    - https://github.com/mcwarman/helm-charts
+    type: application
+    urls:
+    - https://github.com/stvnksslr/sandbox-charts/releases/download/backstage-0.12.0/backstage-0.12.0.tgz
+    version: 0.12.0
+  cloudheim:
+  - apiVersion: v2
+    appVersion: 0.212.6
+    created: "2022-11-29T01:33:13.741682905Z"
+    description: Valheim dedicated server.
+    digest: bc333862b1ac91a76df9a684b1156176636e1c87da0523b310eb5c8c1708820a
+    home: https://www.valheimgame.com/
+    keywords:
+    - game
+    - server
+    name: cloudheim
+    sources:
+    - https://github.com/lloesche/valheim-server-docker
+    urls:
+    - https://github.com/stvnksslr/sandbox-charts/releases/download/cloudheim-1.2.2/cloudheim-1.2.2.tgz
+    version: 1.2.2
+generated: "2022-11-29T01:33:13.741791304Z"
