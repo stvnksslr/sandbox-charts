@@ -35,7 +35,7 @@ spec:
         - name: SERVER_NAME
           value: {{ .Values.valheimServer.serverName | quote }}
         - name: SERVER_PORT
-          value: {{ .Values.valheimServer.serverPort | quote }}
+          value: {{ .Values.networking.gamePort | quote }}
         - name: WORLD_NAME
           value: {{ .Values.valheimServer.worldName | quote }}
         - name: SERVER_PASS
@@ -53,7 +53,7 @@ spec:
         - name: STATUS_HTTP
           value: {{ .Values.valheimServer.status | quote}}
         - name: STATUS_HTTP_PORT
-          value: {{ .Values.valheimServer.statusPort | quote}}
+          value: {{ .Values.networking.statusPort | quote}}
         - name: STEAMCMD_ARGS
           value: {{ .Values.valheimServer.steamArgs | quote }}
 
@@ -67,18 +67,12 @@ spec:
         {{- end }}
         
         ports:
-        - name: valheim-1
-          containerPort: {{ .Values.valheimServer.serverPort | int }}
-          protocol: UDP
-        - name: valheim-2
-          containerPort: {{ .Values.valheimServer.serverPort | int | add 1 }}
-          protocol: UDP
-        - name: valheim-3
-          containerPort: {{ .Values.valheimServer.serverPort | int | add 2 }}
-          protocol: UDP
-        # webserver port  
-        - name: valheim-web
-          containerPort: {{ .Values.valheimServer.statusPort | int }}
+        - containerPort: {{ .Values.networking.gamePort | int }}
+          name: gameport
+        - containerPort: {{ .Values.networking.gamePort | int | add 1 }}
+          name: queryport
+        - containerPort: {{ .Values.networking.statusPort | int }}
+          name: statusport
         
         volumeMounts:
         - name: config

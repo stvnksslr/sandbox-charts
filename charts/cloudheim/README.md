@@ -9,8 +9,8 @@ helm install deploy-name cloudheim/cloudheim  \
   --set valheimServer.serverName="Server Name" \
   --set valheimServer.worldName="World Name" \
   --set valheimServer.serverPass="password" \
-  --set valheimServer.serviceType=NodePort \
-  --set valheimServer.serverPort=32456 \
+  --set valheimServer.networking.serviceType=NodePort \
+  --set valheimServer.networking.serverPort=32456 \
   --namespace valheim .
 ```
 
@@ -21,7 +21,6 @@ helm install deploy-name cloudheim/cloudheim  \
 | `valheimServer.worldName`        | Prefix of the world files to use (will make new if missing)                    | `example-world-name`      |
 | `valheimServer.serverName`       | Server name displayed in the server browser(s)                                 | `example-server-name`     |
 | `valheimServer.password`         | Server password                                                                | `password`                |
-| `valheimServer.serviceType`      | The type of service e.g `NodePort`, `LoadBalancer` or `ClusterIP`              | `ClusterIP`               |
 | `valheimServer.nodeSelector`     | this can be used to select a node with specific resources for your game server | `{}`                      |
 | `valheimServer.serverPublic`     | determines whether the server shows up in the public list or not               | `1`                       |
 | `valheimServer.updateInterval`   | how often the server checks for updates                                        | `10800` \ 3 hours         |
@@ -31,6 +30,7 @@ helm install deploy-name cloudheim/cloudheim  \
 | `valheimServer.mods.valheimPlus` | whether or not valheimPlus mod is enabled                                      | `false`                   |
 | `valheimServer.status`           | wether or not the status endpoint is enabled                                   | false                     |
 | `valheimServer.admins`           | list of steamID's that will be granted admin status                            | []                        |
+| `valheimServer.networkings.serviceType`      | The type of service e.g `NodePort`, `LoadBalancer` or `ClusterIP`              | `ClusterIP`               |
 | `persistence.claimName`          | if set will not generate a pvc and instead use existing clain                  | ""                        |
 | `persistence.config.enabled`     | determines if persistence is enabled                                           | `true`                    |
 | `persistence.config.size`        | size of pvc volume                                                             | `1Gi`                     |

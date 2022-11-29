@@ -12,7 +12,6 @@ resources:
 
 valheimServer:
   serverName: Valheim Kubernetes Server
-  serverPort: 2456
   worldName: Valheim World
   serverPass: valheim-server
   serverPublic: 1
@@ -23,13 +22,18 @@ valheimServer:
   serviceType: NodePort
   nodeSelector: {}
   status: false
-  statusPort: 8080
   admins: []
   steamArgs: ""
 
   mods:
     bepinex: false
     valheimPlus: false
+
+networking:
+  serviceType: LoadBalancer
+  gamePort: 2456
+  nodePort: 30373
+  statusPort: 8080
 
 persistence:
   config:

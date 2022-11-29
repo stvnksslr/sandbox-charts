@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "valheim.fullname" . }}
+  labels:
+    app: {{ template "valheim.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  ports:
+  - name: gameport
+    port: {{ .Values.networking.gamePort | int }}
+    targetPort: {{ .Values.networking.gamePort | int }}
+    protocol: UDP
+    {{- if eq .Values.networking.serviceType "NodePort" }}
+    nodePort: {{ default "" .Values.networking.nodePort }}
+    {{- end }}
+  - name: queryport
+    port: {{ .Values.networking.gamePort | int | add 1 }}
+    targetPort: {{ .Values.networking.gamePort | int | add 1 }}
+    protocol: UDP
+    {{- if eq .Values.networking.serviceType "NodePort" }}
+    nodePort: {{ default "" (.Values.networking.nodePort | int | add 1) }}
+  - name: statusport
+    port: {{ .Values.networking.gamePort | int }}
+    targetPort: {{ .Values.networking.gamePort }}
+    protocol: TCP
+  {{ end }}
+  type: {{ .Values.networking.serviceType }}
+  selector:
+    app: {{ .Release.Name }}
