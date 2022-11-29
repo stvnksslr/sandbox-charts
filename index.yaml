@@ -26,6 +26,21 @@ entries:
   cloudheim:
   - apiVersion: v2
     appVersion: 0.212.6
+    created: "2022-11-29T02:08:53.601733526Z"
+    description: Valheim dedicated server.
+    digest: c9d21f3d256115c94351060f99a13a3dd29f2793b61de71afca2631f824fcf9b
+    home: https://www.valheimgame.com/
+    keywords:
+    - game
+    - server
+    name: cloudheim
+    sources:
+    - https://github.com/lloesche/valheim-server-docker
+    urls:
+    - https://github.com/stvnksslr/sandbox-charts/releases/download/cloudheim-1.3.1/cloudheim-1.3.1.tgz
+    version: 1.3.1
+  - apiVersion: v2
+    appVersion: 0.212.6
     created: "2022-11-29T01:35:33.450089743Z"
     description: Valheim dedicated server.
     digest: ac3e2fab119b0cda81864734c907dc08ac2375bc8a34ee22d3f394ced3eca281
@@ -54,4 +69,4 @@ entries:
     urls:
     - https://github.com/stvnksslr/sandbox-charts/releases/download/cloudheim-1.2.2/cloudheim-1.2.2.tgz
     version: 1.2.2
-generated: "2022-11-29T01:35:33.450106243Z"
+generated: "2022-11-29T02:08:53.602083726Z"
