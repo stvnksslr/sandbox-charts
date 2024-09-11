@@ -127,4 +127,16 @@ entries:
     urls:
     - https://github.com/stvnksslr/sandbox-charts/releases/download/generic-app-0.1.0/generic-app-0.1.0.tgz
     version: 0.1.0
-generated: "2024-09-11T17:52:54.092470304Z"
+  generic-service:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-11T17:55:36.182430133Z"
+    description: A Helm chart for a generic application
+    digest: 80f2301b80b5cd8e8a00277bfb45bcf4a4feba2753fe1a6ee5e7a15112170d95
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
+    name: generic-service
+    type: application
+    urls:
+    - https://github.com/stvnksslr/sandbox-charts/releases/download/generic-service-0.1.0/generic-service-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-09-11T17:55:36.182449109Z"
