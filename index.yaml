@@ -115,4 +115,16 @@ entries:
     urls:
     - https://github.com/stvnksslr/sandbox-charts/releases/download/cloudheim-1.2.2/cloudheim-1.2.2.tgz
     version: 1.2.2
-generated: "2022-11-29T02:26:04.780163545Z"
+  generic-app:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2024-09-11T17:52:54.092435709Z"
+    description: A Helm chart for a generic application
+    digest: d6c71e106de3debe434e8f1022e63ae8887809a1ed11ad515d12121765740573
+    icon: https://raw.githubusercontent.com/kubernetes/kubernetes/master/logo/logo.png
+    name: generic-app
+    type: application
+    urls:
+    - https://github.com/stvnksslr/sandbox-charts/releases/download/generic-app-0.1.0/generic-app-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-09-11T17:52:54.092470304Z"
