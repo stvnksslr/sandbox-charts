@@ -1,0 +1,53 @@
+appName: appname
+
+replicaCount: 1
+
+image:
+  repository: imageRepo
+  tag: latest
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+env: {}
+
+command: []
+
+host: example.hostname.com
+tlsSecretName: example-secret
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: false
+
+resources:
+  requests:
+    memory: 2Gi
+    cpu: 100m
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+persistence:
+  enabled: false
+  storageClass: do-block-storage
+  size: 1Gi
+
+certificate:
+  enabled: false
+  issuerRef:
+    name: issuerName
+    kind: ClusterIssuer

@@ -1,8 +1,0 @@
-***********************************************************************
-* Backstage                                                           *
-***********************************************************************
-  Chart version:     {{ .Chart.Version }}
-  App version:       {{ .Chart.AppVersion }}
-  App image tag:     {{ include "backstage.appImage" . }}
-  Backend image tag: {{ include "backstage.backendImage" . }}
-***********************************************************************
